@@ -1,0 +1,19 @@
+{
+  "name": "henryscheintakehometest",
+  "version": "1.0.0",
+  "description": "Henry Schein applicant take home test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blackhurstjoshua/HenryScheinTakeHomeTest.git"
+  },
+  "author": "Joshua Blackhurst",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blackhurstjoshua/HenryScheinTakeHomeTest/issues"
+  },
+  "homepage": "https://github.com/blackhurstjoshua/HenryScheinTakeHomeTest#readme"
+}
