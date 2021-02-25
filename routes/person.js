@@ -70,10 +70,30 @@ router.post('/', async (req, res) => {
 })
 
 // ! Put
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
+  try {
+    /*
+    Todo: 0. Make sure the social is not being changed, and that the fields are correct.
+    *Todo: 1. Find the person and index. 
+    *Todo: 2. Replace values (either individually or the whole thing). 
+    *Todo: 3. Place the updated data where the old data was
+    */
+    let personToChange = findPerson(req.params.id)
+    let index = findIndex(req.params.id)
+    let newPerson = await new Person(
+      req.body.firstName,
+      req.body.lastName,
+      req.body.dateOfBirth,
+      req.body.emailAddress,
+      personToChange.socialSecurityNumber
+    )
+    persons.splice(index,1, newPerson)
+    
+    res.status(200).json(newPerson)
+  } catch(err) {
+
+  }
   
-  // return updated person
-  res.status(200).send(`updated: ${req.params.id} to: ${req.body.firstName} (THIS IS NOT COMPLETE)`)
 })
 
 // ? Delete (needs final check)
