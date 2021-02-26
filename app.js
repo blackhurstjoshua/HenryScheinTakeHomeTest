@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 
+const handleErrors = require('./middleware/handleErrors')
 const bodyparser = require('body-parser')
 
 // Routes
@@ -10,6 +11,7 @@ const personRoute = require('./routes/person')
 app.use(bodyparser.json())
 
 app.use('/person', personRoute)
+app.use(handleErrors)
 
 
 // app.get('/', (req, res) => {

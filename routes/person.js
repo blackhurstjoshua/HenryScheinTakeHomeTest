@@ -1,4 +1,19 @@
 const router = require('express').Router()
+const { BadRequest } = require('../utils/errors')
+
+
+
+
+//  ! IMPORTANT: Review article on creating an error handling middleware!!!
+
+
+
+
+
+
+// Todo: Consider catching an invalid leap day birthday.
+// let dateObj = new Date()
+// console.log(dateObj)
 
 let persons = []
 class Person {
@@ -52,9 +67,13 @@ router.get('/:id', (req, res) => {
   }
 })
 
-// ? Add new (field error handling and strict class usage)
+// ? Add new (field error handling and strict class usage : don't allow for duplicate person)
 router.post('/', async (req, res) => {
   try {
+    let soc = req.body.socialSecurityNumber
+    if (findIndex(soc) >= 0)
+      throw new BadRequest('User already exists')
+
     let newPerson = await new Person(
       req.body.firstName,
       req.body.lastName,
@@ -62,14 +81,17 @@ router.post('/', async (req, res) => {
       req.body.emailAddress,
       req.body.socialSecurityNumber
     )
+
+    if (!newPerson.firstName)
+      throw new BadRequest('Missing first name')
     persons.push(newPerson)
-    res.status(201).json(newPerson)
+    return res.status(201).json(newPerson)
   } catch (err) {
-    res.status(500).send(`Unknown server side error: ${err}`)
+    return res.status(400).send(err)
   }
 })
 
-// ! Put
+// ? Put
 router.put('/:id', async (req, res) => {
   try {
     /*
