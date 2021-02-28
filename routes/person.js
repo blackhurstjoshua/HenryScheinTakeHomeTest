@@ -1,59 +1,22 @@
 const router = require('express').Router()
+const Person = require('../models/Person')
+const { findPerson, findIndex, validSocial } = require('../utils/helpers')
 const { BadRequest, GeneralError } = require('../utils/errors')
 
 // ! IMPORTANT: Consider checking for if(index < 0) instead of if(index > -1)
 // ! IMPORTANT: MAKE IT LOOK NICE. Double check spacing, quotes, and semicolons.
-// Todo: Move person class and functions into seperate folders.
-// Todo: Check over document and requirements one more time.
 
-let persons = []
-class Person {
-  constructor(firstName, lastName, dateOfBirth, emailAddress, socialSecurityNumber) {
-    this.firstName = firstName
-    this.lastName = lastName
-    this.dateOfBirth = new Date(dateOfBirth)
-    this.emailAddress = emailAddress
-    this.socialSecurityNumber = socialSecurityNumber
-  }
+// Database
+let persons = [] 
 
-  validate() {
-    let letters = /^[a-zA-Z]+$/
-    let socials = /^(\d{3}-\d{2}-\d{4})+$/
-    console.log(socials.test(this.socialSecurityNumber))
+// Preload variables ========================
+let testPerson1 = new Person('Alice', 'Wonderland', '07/26/1951', 'wonderland.alice@gmail.com', '072-61-1951')
+let testPerson2 = new Person('Jack', 'Dexter', '11/03/2009', 'dexter.jack@gmail.com', '113-03-2009')
+let testPerson3 = new Person('Rachet', 'Clank', '11/04/2002', 'clank.rachet@gmail.com', '114-04-2002')
+let testPerson4 = new Person('Geralt', 'Rivia', '05/19/2015', 'rivia.geralt@gmail.com', '505-19-2015')
+persons.push(testPerson1, testPerson2, testPerson3, testPerson4)
 
-    if (this.firstName && this.lastName && this.dateOfBirth && this.emailAddress && this.socialSecurityNumber) {
-      if (letters.test(this.firstName) && letters.test(this.lastName)) {
-        if (this.dateOfBirth != "Invalid Date") {
-          if (this.emailAddress.indexOf('@') > -1) {
-            if (socials.test(this.socialSecurityNumber))
-              return true
-          }
-        }
-      }
-    }
-  }
-}
 
-function findPerson(key) {
-  let person = persons.find((per, index) => {
-    if (per.socialSecurityNumber == key)
-    return true
-  })
-  return person
-}
-
-function findIndex(key) {
-  let index = persons.findIndex((per, index) => {
-    if (per.socialSecurityNumber == key)
-    return true
-  })
-  return index
-}
-
-function validSocial(key) {
-  let socials = /^(\d{3}-\d{2}-\d{4})+$/
-  return socials.test(key)
-}
 
 // ROUTES ==============================
 
@@ -71,12 +34,11 @@ router.get('/', (req, res, next) => {
 // * Get One
 router.get('/:id', (req, res, next) => {
   try {
-    let valid = validSocial(req.params.id)
-    console.log(valid)
+    let valid = validSocial(req.params.id, persons)
     if (!valid)
       throw new BadRequest('Invalid social security number')
 
-    let person = findPerson(req.params.id)
+    let person = findPerson(req.params.id, persons)
     if (!person)
       throw new BadRequest(`Person at ${req.params.id} does not exist`)
 
@@ -90,7 +52,7 @@ router.get('/:id', (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     let soc = req.body.socialSecurityNumber
-    if (findIndex(soc) > -1)
+    if (findIndex(soc, persons) > -1)
       throw new BadRequest('User already exists')
     
     let newPerson = await new Person(
@@ -126,8 +88,8 @@ router.put('/:id', async (req, res, next) => {
     if (!validSoc)
       throw new BadRequest('Invalid social security number')
 
-    let personToChange = findPerson(req.params.id)
-    let index = findIndex(req.params.id)
+    let personToChange = findPerson(req.params.id, persons)
+    let index = findIndex(req.params.id, persons)
     let newPerson = await new Person(
       req.body.firstName,
       req.body.lastName,
@@ -154,7 +116,7 @@ router.delete('/:id', (req, res, next) => {
     if (!valid)
       throw new BadRequest('Invalid social security number')
 
-    let index = findIndex(req.params.id)
+    let index = findIndex(req.params.id, persons)
     if(index < 0)
       throw new BadRequest('User does not exist')
     
@@ -172,12 +134,6 @@ module.exports = router
 
 
 
-// Preload variables ========================
-let testPerson1 = new Person('Alice', 'Wonderland', '07/26/1951', 'wonderland.alice@gmail.com', '072-61-1951')
-let testPerson2 = new Person('Jack', 'Dexter', '11/03/2009', 'dexter.jack@gmail.com', '113-03-2009')
-let testPerson3 = new Person('Rachet', 'Clank', '11/04/2002', 'clank.rachet@gmail.com', '114-04-2002')
-let testPerson4 = new Person('Geralt', 'Rivia', '05/19/2015', 'rivia.geralt@gmail.com', '505-19-2015')
-persons.push(testPerson1, testPerson2, testPerson3, testPerson4)
 
 
 
