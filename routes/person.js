@@ -146,7 +146,7 @@ router.put('/:id', async (req, res, next) => {
   }  
 })
     
-// * Delete
+// ? Delete (error handling one more time)
 router.delete('/:id', (req, res, next) => {
   try {
     let valid = validSocial(req.params.id)
@@ -163,7 +163,7 @@ router.delete('/:id', (req, res, next) => {
       message: `Person with ${req.params.id} social, has been deleted.`
     })
   } catch(err) {
-    res.status(400).send(err)
+    next(err)
   }
 })
     
