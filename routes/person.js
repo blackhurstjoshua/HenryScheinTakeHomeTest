@@ -4,6 +4,7 @@ const { BadRequest, GeneralError } = require('../utils/errors')
 // ! IMPORTANT: Consider checking for if(index < 0) instead of if(index > -1)
 // ! IMPORTANT: MAKE IT LOOK NICE. Double check spacing, quotes, and semicolons.
 // Todo: Move person class and functions into seperate folders.
+// Todo: Check over document and requirements one more time.
 
 let persons = []
 class Person {
