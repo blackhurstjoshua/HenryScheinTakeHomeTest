@@ -3,11 +3,8 @@ const Person = require('../models/Person')
 const { findPerson, findIndex, validSocial } = require('../utils/helpers')
 const { BadRequest, GeneralError } = require('../utils/errors')
 
-// ! IMPORTANT: Consider checking for if(index < 0) instead of if(index > -1)
-// ! IMPORTANT: MAKE IT LOOK NICE. Double check spacing, quotes, and semicolons.
-
 // Database
-let persons = [] 
+let persons = []
 
 // Preload variables ========================
 let testPerson1 = new Person('Alice', 'Wonderland', '07/26/1951', 'wonderland.alice@gmail.com', '072-61-1951')
@@ -17,14 +14,13 @@ let testPerson4 = new Person('Geralt', 'Rivia', '05/19/2015', 'rivia.geralt@gmai
 persons.push(testPerson1, testPerson2, testPerson3, testPerson4)
 
 
-
 // ROUTES ==============================
 
 // * Get
 router.get('/', (req, res, next) => {
   try {
     if (!persons.length)
-    throw new GeneralError('Persons array is empty.')
+      throw new GeneralError('Persons array is empty.')
     res.status(200).json(persons)
   } catch(err) {
     next(err)
@@ -78,12 +74,6 @@ router.post('/', async (req, res, next) => {
 // * Put
 router.put('/:id', async (req, res, next) => {
   try {
-    /*
-    *Todo: 1. Find the person and index. 
-    *Todo: 2. Replace values (either individually or the whole thing). 
-    *Todo: 3. Place the updated data where the old data was
-    */
-
     let validSoc = validSocial(req.params.id)
     if (!validSoc)
       throw new BadRequest('Invalid social security number')
@@ -129,25 +119,5 @@ router.delete('/:id', (req, res, next) => {
     next(err)
   }
 })
-    
+
 module.exports = router
-
-
-
-
-
-
-
-
-
-
-
-// GRAVEYARD =========================================
-/*
-console.log(letters.test(this.firstName))
-console.log(letters.test(this.lastName))
-console.log(this.dateOfBirth)
-console.log(this.emailAddress.indexOf('@'))
-console.log(socials.test(this.socialSecurityNumber))
-console.log('----')
-*/

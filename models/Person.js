@@ -10,11 +10,10 @@ class Person {
   validate() {
     let letters = /^[a-zA-Z]+$/
     let socials = /^(\d{3}-\d{2}-\d{4})+$/
-    console.log(socials.test(this.socialSecurityNumber))
 
     if (this.firstName && this.lastName && this.dateOfBirth && this.emailAddress && this.socialSecurityNumber) {
       if (letters.test(this.firstName) && letters.test(this.lastName)) {
-        if (this.dateOfBirth != "Invalid Date") {
+        if (this.dateOfBirth != "Invalid Date" && this.dateOfBirth < new Date()) {
           if (this.emailAddress.indexOf('@') > -1) {
             if (socials.test(this.socialSecurityNumber))
               return true
